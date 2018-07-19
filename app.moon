@@ -1,4 +1,7 @@
 lapis = require "lapis"
+import respond_to from require "lapis.application"
+import json_params from require "lapis.application"
+
 db = require "lapis.db"
 
 -- TODO: Factor out
@@ -15,6 +18,21 @@ class App extends lapis.Application
   	@html ->
   		h2 "Index"
   		a href: @url_for("list_servers"), "List servers"
+
+  [characters: "/characters"]: respond_to {
+    GET: =>
+      @html -> 
+        h2 "Characters"
+        p "Not implemented"
+
+    POST: json_params => {
+      json: {
+        params: @params
+        success: true
+        message: "hello world"
+      }
+    }
+  }
 
   [list_servers: "/servers"]: =>
     @html ->
