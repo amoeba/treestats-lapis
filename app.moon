@@ -21,7 +21,7 @@ class App extends lapis.Application
 
   [characters: "/characters"]: respond_to {
     GET: =>
-      @html -> 
+      @html ->
         h2 "Characters"
         p "Not implemented"
 
@@ -43,7 +43,7 @@ class App extends lapis.Application
 
   [server: "/server/:server"]: =>
     res = db.query "select * from characters"
-    
+
     @html ->
     	h2 "Character Listing for #{@params.server}"
     	ul ->
