@@ -1,0 +1,4 @@
+logs/
+logfile
+*.compiled
+.tup
