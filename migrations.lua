@@ -7,10 +7,6 @@ return {
   [1] = function(self)
     return create_table("characters", {
       {
-        "id",
-        types.serial
-      },
-      {
         "name",
         types.text
       },
@@ -19,26 +15,14 @@ return {
         types.text
       },
       {
-        "race",
-        types.enum
-      },
-      {
-        "gender",
-        types.enum
-      },
-      {
-        "level",
-        types.integer
-      },
-      {
         "created_at",
-        types.date
+        types.time
       },
       {
         "updated_at",
-        types.date
+        types.time
       },
-      "PRIMARY KEY (id)"
+      "PRIMARY KEY (name, server)"
     })
   end
 }

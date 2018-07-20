@@ -4,12 +4,13 @@ respond_to = require("lapis.application").respond_to
 local json_params
 json_params = require("lapis.application").json_params
 local db = require("lapis.db")
+local Characters
+Characters = require("models.characters").Characters
 local servers = {
   'WintersEbb'
 }
 local Model
 Model = require("lapis.db.model").Model
-local Character
 do
   local _class_0
   local _parent_0 = Model
@@ -21,7 +22,7 @@ do
       return _class_0.__parent.__init(self, ...)
     end,
     __base = _base_0,
-    __name = "Character",
+    __name = "Characters",
     __parent = _parent_0
   }, {
     __index = function(cls, name)
@@ -45,7 +46,7 @@ do
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
-  Character = _class_0
+  Characters = _class_0
 end
 local App
 do
@@ -73,11 +74,11 @@ do
       end,
       POST = json_params(function(self)
         return {
-          json = {
-            params = self.params,
-            success = true,
-            message = "hello world"
-          }
+          Characters:create({
+            name = "Test",
+            server = "Test"
+          }),
+          "POST /characters"
         }
       end)
     }),

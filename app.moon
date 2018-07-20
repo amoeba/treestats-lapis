@@ -4,6 +4,9 @@ import json_params from require "lapis.application"
 
 db = require "lapis.db"
 
+
+import Characters from require "models.characters"
+
 -- TODO: Factor out
 servers = {
 	'WintersEbb'
@@ -11,7 +14,7 @@ servers = {
 
 import Model from require "lapis.db.model"
 
-class Character extends Model
+class Characters extends Model
 
 class App extends lapis.Application
   [index: "/"]: =>
@@ -26,11 +29,12 @@ class App extends lapis.Application
         p "Not implemented"
 
     POST: json_params => {
-      json: {
-        params: @params
-        success: true
-        message: "hello world"
+      Characters\create {
+        name: "Test"
+        server: "Test"
       }
+
+      "POST /characters"
     }
   }
 
@@ -53,5 +57,8 @@ class App extends lapis.Application
 
   [character: "/server/:server/:name"]: =>
   	@html ->
+      -- character = Characters.find server: @params.server name: @params.name
+      -- return status: 404 unless character
+
   		h2 "#{@params.server}/#{@params.name}"
   		span "Not implemented yet..."

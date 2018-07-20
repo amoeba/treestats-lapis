@@ -1,1 +1,2 @@
 : foreach *.moon |> moonc %f |> %B.lua
+: foreach models/*.moon |> moonc %f |> models/%B.lua
