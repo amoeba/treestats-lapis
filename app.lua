@@ -13,7 +13,14 @@ local Characters
 do
   local _class_0
   local _parent_0 = Model
-  local _base_0 = { }
+  local _base_0 = {
+    url_params = function(self, req, ...)
+      return "character", {
+        server = self.server,
+        name = self.name
+      }
+    end
+  }
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
@@ -67,7 +74,7 @@ do
       return self:html(function()
         h2("Index")
         return a({
-          href = self:url_for("list_servers")
+          href = self:url_for("servers")
         }, "List servers")
       end)
     end,
@@ -75,23 +82,23 @@ do
       characters = "/characters"
     }] = respond_to({
       GET = function(self)
-        return self:html(function()
-          h2("Characters")
-          return p("Not implemented")
-        end)
+        self.characters = db.query("select * from characters")
+        return {
+          render = true
+        }
       end,
       POST = json_params(function(self)
         return {
-          Characters:create({
-            name = "Test",
-            server = "Test"
-          }),
-          "POST /characters"
+          {
+            json = {
+              character = self:url_for(Characters:create(self.params))
+            }
+          }
         }
       end)
     }),
     [{
-      list_servers = "/servers"
+      servers = "/servers"
     }] = function(self)
       return self:html(function()
         return ul(function()
@@ -110,7 +117,7 @@ do
     [{
       server = "/server/:server"
     }] = function(self)
-      local res = db.query("select * from characters")
+      local res = db.query("select * from characters where server = ?", self.params.server)
       return self:html(function()
         h2("Character Listing for " .. tostring(self.params.server))
         return ul(function()
@@ -164,6 +171,8 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self:enable("etlua")
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end

@@ -10,34 +10,37 @@ import Model, enum from require "lapis.db.model"
 class Characters extends Model
   @primary_key: { "server", "name" }
   @timestamp: true
+  url_params: (req, ...) =>
+    "character", { server: @server, name: @name }
+
 -- TODO: Factor out
 servers = {
   'WintersEbb'
 }
 
 class App extends lapis.Application
+  @enable "etlua"
+
   [index: "/"]: =>
     @html ->
       h2 "Index"
-      a href: @url_for("list_servers"), "List servers"
+      a href: @url_for("servers"), "List servers"
 
   [characters: "/characters"]: respond_to {
     GET: =>
-      @html ->
-        h2 "Characters"
-        p "Not implemented"
+      @characters = db.query "select * from characters"
+      render: true
 
     POST: json_params => {
-      Characters\create {
-        name: "Test"
-        server: "Test"
+      {
+        json: {
+          character: @url_for Characters\create @params
+        }
       }
-
-      "POST /characters"
     }
   }
 
-  [list_servers: "/servers"]: =>
+  [servers: "/servers"]: =>
     @html ->
       ul ->
         for i = 1, #servers
@@ -45,7 +48,7 @@ class App extends lapis.Application
             a href: @url_for("server", server: servers[i]), servers[i]
 
   [server: "/server/:server"]: =>
-    res = db.query "select * from characters"
+    res = db.query "select * from characters where server = ?", @params.server
 
     @html ->
       h2 "Character Listing for #{@params.server}"
