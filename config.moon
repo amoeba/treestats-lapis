@@ -4,6 +4,6 @@ import config from require "lapis.config"
 config "development", ->
   postgres ->
     host "127.0.0.1"
-    user "postgres"
-    password ""
-    database "treestats"
+    user "lapispktest"
+    password "lapispktest"
+    database "lapispktest"

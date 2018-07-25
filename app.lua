@@ -4,13 +4,12 @@ respond_to = require("lapis.application").respond_to
 local json_params
 json_params = require("lapis.application").json_params
 local db = require("lapis.db")
+local Model, enum
+do
+  local _obj_0 = require("lapis.db.model")
+  Model, enum = _obj_0.Model, _obj_0.enum
+end
 local Characters
-Characters = require("models.characters").Characters
-local servers = {
-  'WintersEbb'
-}
-local Model
-Model = require("lapis.db.model").Model
 do
   local _class_0
   local _parent_0 = Model
@@ -43,11 +42,20 @@ do
     end
   })
   _base_0.__class = _class_0
+  local self = _class_0
+  self.primary_key = {
+    "server",
+    "name"
+  }
+  self.timestamp = true
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
   Characters = _class_0
 end
+local servers = {
+  'WintersEbb'
+}
 local App
 do
   local _class_0
@@ -105,17 +113,18 @@ do
       local res = db.query("select * from characters")
       return self:html(function()
         h2("Character Listing for " .. tostring(self.params.server))
-        ul(function() end)
-        for i = 1, #res do
-          li(function()
-            return a({
-              href = self:url_for("character", {
-                server = self.params.server,
-                name = res[i].name
-              })
-            }, res[i].name)
-          end)
-        end
+        return ul(function()
+          for i = 1, #res do
+            li(function()
+              return a({
+                href = self:url_for("character", {
+                  server = self.params.server,
+                  name = res[i].name
+                })
+              }, res[i].name)
+            end)
+          end
+        end)
       end)
     end,
     [{

@@ -5,22 +5,21 @@ import json_params from require "lapis.application"
 db = require "lapis.db"
 
 
-import Characters from require "models.characters"
-
--- TODO: Factor out
-servers = {
-	'WintersEbb'
-}
-
-import Model from require "lapis.db.model"
+import Model, enum from require "lapis.db.model"
 
 class Characters extends Model
+  @primary_key: { "server", "name" }
+  @timestamp: true
+-- TODO: Factor out
+servers = {
+  'WintersEbb'
+}
 
 class App extends lapis.Application
   [index: "/"]: =>
-  	@html ->
-  		h2 "Index"
-  		a href: @url_for("list_servers"), "List servers"
+    @html ->
+      h2 "Index"
+      a href: @url_for("list_servers"), "List servers"
 
   [characters: "/characters"]: respond_to {
     GET: =>
@@ -49,16 +48,16 @@ class App extends lapis.Application
     res = db.query "select * from characters"
 
     @html ->
-    	h2 "Character Listing for #{@params.server}"
-    	ul ->
+      h2 "Character Listing for #{@params.server}"
+      ul ->
         for i = 1, #res
           li ->
             a href: @url_for("character", server: @params.server, name: res[i].name), res[i].name
 
   [character: "/server/:server/:name"]: =>
-  	@html ->
+    @html ->
       -- character = Characters.find server: @params.server name: @params.name
       -- return status: 404 unless character
 
-  		h2 "#{@params.server}/#{@params.name}"
-  		span "Not implemented yet..."
+      h2 "#{@params.server}/#{@params.name}"
+      span "Not implemented yet..."
