@@ -100,19 +100,10 @@ do
     [{
       servers = "/servers"
     }] = function(self)
-      return self:html(function()
-        return ul(function()
-          for i = 1, #servers do
-            li(function()
-              return a({
-                href = self:url_for("server", {
-                  server = servers[i]
-                })
-              }, servers[i])
-            end)
-          end
-        end)
-      end)
+      self.servers = db.query("select distinct server from characters limit 100")
+      return {
+        render = true
+      }
     end,
     [{
       server = "/server/:server"
@@ -137,10 +128,11 @@ do
     [{
       character = "/server/:server/:name"
     }] = function(self)
-      return self:html(function()
-        h2(tostring(self.params.server) .. "/" .. tostring(self.params.name))
-        return span("Not implemented yet...")
-      end)
+      self.character = db.query("select server, name from characters where server = ? and name = ? limit 1", self.params.server, self.params.name)
+      print("@character is " .. tostring(self.character))
+      return {
+        render = true
+      }
     end
   }
   _base_0.__index = _base_0

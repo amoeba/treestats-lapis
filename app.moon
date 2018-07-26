@@ -41,11 +41,8 @@ class App extends lapis.Application
   }
 
   [servers: "/servers"]: =>
-    @html ->
-      ul ->
-        for i = 1, #servers
-          li ->
-            a href: @url_for("server", server: servers[i]), servers[i]
+    @servers = db.query "select distinct server from characters limit 100"
+    render: true
 
   [server: "/server/:server"]: =>
     res = db.query "select * from characters where server = ?", @params.server
@@ -58,9 +55,6 @@ class App extends lapis.Application
             a href: @url_for("character", server: @params.server, name: res[i].name), res[i].name
 
   [character: "/server/:server/:name"]: =>
-    @html ->
-      -- character = Characters.find server: @params.server name: @params.name
-      -- return status: 404 unless character
-
-      h2 "#{@params.server}/#{@params.name}"
-      span "Not implemented yet..."
+    @character = db.query "select server, name from characters where server = ? and name = ? limit 1", @params.server, @params.name
+    print "@character is #{@character}"
+    render: true
