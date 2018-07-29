@@ -1,0 +1,7 @@
+<h2><%= params.server %></h2>
+
+<ul>
+<% for c in characters:iterator() do %>
+<li><a href="/server/<%= c.s %>/<%= c.n %>"><%= c.s %>/<%= c.n %></a></li>
+<% end %>
+</ul>

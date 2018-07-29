@@ -1,3 +1,3 @@
-<h2><%= character.server %>-<%= character.name %></h2>
+<h2><%= character.s %>-<%= character.n %></h2>
 
 Not implemented yet

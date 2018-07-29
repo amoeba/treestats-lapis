@@ -1,7 +1,7 @@
 <h2>Servers</h2>
 
-<ul>
-<% for i, s in ipairs(servers) do %>
-  <li><a href="/server/<%= s.server %>"><%= s.server  %></li>
+<ul class="list">
+<% for i,s in pairs(servers) do %>
+  <li><a href="/server/<%= s %>"><%= s %></a></li>
 <% end %>
 </ul>
